@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-
-import 'splash_screen.dart';
 import 'package:sistem_akademik/home.dart';
+import 'splash_screen.dart';
+import 'login_screen.dart';
+import 'profile_screen.dart';
+import 'register_screen.dart';
+import 'onboarding_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +24,11 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const SplashScreen(),
-        '/home': (context) => const HomeScreen(),
+        '/onboarding': (context) => OnboardingScreen(),
+        '/home': (context) => HomePage(),
+        '/login': (context) => LoginScreen(),
+        '/register': (context) => RegisterScreen(),
+        '/profile': (context) => const ProfileScreen(),
       },
     );
   }
@@ -39,4 +46,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-

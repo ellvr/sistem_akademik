@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:sistem_akademik/design_system.dart';
 import 'package:sistem_akademik/navbar.dart';
 import 'package:sistem_akademik/nfc_page.dart';
-// 1. IMPORT HALAMAN LAINNYA
 import 'package:sistem_akademik/qr_scan_screen.dart';
 import 'package:sistem_akademik/my_qr_code_screen.dart';
 import 'package:sistem_akademik/schedule.dart';
+import 'package:sistem_akademik/profile_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,17 +15,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // 2. STATE UNTUK MELACAK HALAMAN AKTIF
   int _selectedIndex = 0;
 
-  // 3. BUAT DAFTAR HALAMAN (WIDGETS)
-  // Urutan harus sama dengan navbar: 0=Home, 1=Scan, 2=Catatan, dst.
   static const List<Widget> _pages = <Widget>[
-    HomeContent(), // Halaman Home (kita buat di bawah)
-    QrScanScreen(), // Halaman Scan QR
-    NfcPage(), // Halaman Catatan (contoh)
-    SchedulePage(), // Halaman Jadwal (contoh)
-    PlaceholderPage(title: 'halaman profil'), // Halaman Profil (contoh)
+    HomeContent(),
+    QrScanScreen(),
+    NfcPage(),
+    SchedulePage(),
+    ProfileScreen(), 
   ];
 
   @override
@@ -33,14 +30,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: AppColors.background,
 
-      // 4. BODY SEKARANG MENAMPILKAN HALAMAN SESUAI STATE
       body: _pages[_selectedIndex],
 
-      // 5. HUBUNGKAN NAVBAR KE STATE
       bottomNavigationBar: BottomNavBar(
-        initialIndex: _selectedIndex, // Beri tahu navbar index saat ini
+        initialIndex: _selectedIndex,
         onItemTapped: (index) {
-          // Saat navbar diklik, update state
           setState(() {
             _selectedIndex = index;
           });
@@ -51,8 +45,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 // -------------------------------------------------------------------
-// KONTEN ASLI HOME.DART KITA PINDAHKAN KE WIDGET SENDIRI
-// Ini membuat `HomePage` (di atas) bersih & hanya berfungsi sebagai navigasi
+// KONTEN ASLI HOME.DART
 // -------------------------------------------------------------------
 class HomeContent extends StatelessWidget {
   const HomeContent({super.key});
@@ -63,7 +56,7 @@ class HomeContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildCustomAppBar(),
+          _buildCustomAppBar(context),
           _buildOngoingClassCard(),
           _buildAnnouncementsSection(),
         ],
@@ -71,17 +64,20 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-  // --- Semua method _build... milik HomeContent ada di sini ---
-
   // Bagian 1: Custom App Bar (Profil & Notifikasi)
-  Widget _buildCustomAppBar() {
+  Widget _buildCustomAppBar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
       child: Row(
         children: [
-          const CircleAvatar(
-            radius: 28,
-            backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=56'),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).pushNamed('/profile');
+            },
+            child: const CircleAvatar(
+              radius: 28,
+              backgroundImage: AssetImage('assets/user_avatar.png'), // Menggunakan Asset untuk menghindari SocketException
+            ),
           ),
           const SizedBox(width: 12),
           Column(
@@ -121,7 +117,8 @@ class HomeContent extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Container(
         padding: const EdgeInsets.all(20.0),
-        decoration: BoxDecoration(
+        // Hapus 'const' dari BoxDecoration jika AppColors.primary bukan const
+        decoration: BoxDecoration( 
           color: AppColors.primary,
           borderRadius: BorderRadius.circular(16.0),
           boxShadow: [
@@ -221,7 +218,8 @@ class HomeContent extends StatelessWidget {
                 vertical: 20.0,
               ),
               child: Container(
-                decoration: BoxDecoration(
+                // Hapus 'const' dari BoxDecoration
+                decoration: BoxDecoration( 
                   color: AppColors.surface,
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
@@ -256,7 +254,8 @@ class HomeContent extends StatelessWidget {
                         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                         children: [
                           _buildAnnouncementItem(),
-                          const Divider(thickness: 0.6),
+                          // Ganti const Divider dengan Divider biasa
+                          Divider(thickness: 0.6), 
                           _buildAnnouncementItem(),
                         ],
                       ),
@@ -319,30 +318,9 @@ class HomeContent extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
+          // Ganti const Divider dengan Divider biasa
           Divider(thickness: 0.5, color: AppColors.surface),
         ],
-      ),
-    );
-  }
-}
-
-// -------------------------------------------------------------------
-// WIDGET CONTOH UNTUK HALAMAN YANG BELUM DIBUAT
-// -------------------------------------------------------------------
-class PlaceholderPage extends StatelessWidget {
-  final String title;
-  const PlaceholderPage({super.key, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        title,
-        style: TextStyle(
-          color: AppColors.textPrimary,
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
       ),
     );
   }

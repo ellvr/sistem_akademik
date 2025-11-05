@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,6 +18,16 @@ class _SplashScreenState extends State<SplashScreen> {
     _startAnimationSequence();
   }
 
+  void _navigateToNextScreen(bool isLoggedIn, bool isFirstLaunch) {
+    if (mounted) {
+      if (isLoggedIn) {
+        Navigator.of(context).pushReplacementNamed('/home');
+      } else {
+        Navigator.of(context).pushReplacementNamed('/onboarding');
+      }
+    }
+  }
+
   void _startAnimationSequence() async {
     await Future.delayed(const Duration(milliseconds: 500));
     
@@ -32,9 +43,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
     await Future.delayed(const Duration(milliseconds: 2000));
     
-    if (mounted) {
-      Navigator.of(context).pushReplacementNamed('/home');
+    final prefs = await SharedPreferences.getInstance();
+    final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    final isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
+
+    if (isFirstLaunch) {
+      await prefs.setBool('isFirstLaunch', false);
     }
+
+    _navigateToNextScreen(isLoggedIn, isFirstLaunch);
   }
 
   @override
@@ -47,19 +64,15 @@ class _SplashScreenState extends State<SplashScreen> {
           child: AnimatedOpacity(
             opacity: _showLogo ? 1.0 : 0.0,
             duration: const Duration(milliseconds: 1000),
-            child: const Column(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                CircleAvatar(
-                  radius: 40,
-                  backgroundColor: Colors.white,
-                  child: Text(
-                    'S',
-                    style: TextStyle(fontSize: 30, color: Colors.black),
-                  ), 
-                ),
-                SizedBox(height: 10),
-                Text(
+                SizedBox( child: Image.asset(
+                  'lib/assets/ub.png',
+                  width: 85,
+                ),),
+                const SizedBox(height: 10),
+                const Text(
                   'SIAM',
                   style: TextStyle(
                     fontSize: 34,
@@ -67,8 +80,8 @@ class _SplashScreenState extends State<SplashScreen> {
                     color: Colors.white,
                   ),
                 ),
-                Text(
-                  'Sistem Akademik Mahasiswa S2',
+                const Text(
+                  'Sistem Akademik Mahasiswa Pascasarjana',
                   style: TextStyle(
                     fontSize: 16,
                     color: Color(0xFFE0E0E0),
