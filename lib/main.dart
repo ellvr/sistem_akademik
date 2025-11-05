@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'splash_screen.dart';
+import 'package:sistem_akademik/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,3 +39,4 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
