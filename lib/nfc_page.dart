@@ -3,8 +3,7 @@ import 'package:sistem_akademik/design_system.dart';
 import 'package:sistem_akademik/navbar.dart';
 import 'dart:async';
 import 'package:nfc_manager/nfc_manager.dart';
-import 'package:flutter_svg/flutter_svg.dart'; 
-
+import 'package:flutter_svg/flutter_svg.dart';
 
 class NfcPage extends StatefulWidget {
   const NfcPage({super.key});
@@ -65,10 +64,10 @@ class _NfcPageState extends State<NfcPage> {
   //       // Hentikan timer & sesi
   //       _timer?.cancel();
   //       NfcManager.instance.stopSession();
-        
+
   //       // Tampilkan popup sukses
   //       _showResultDialog(isSuccess: true);
-        
+
   //       // Di sini Anda bisa memproses data 'tag'
   //       // print(tag.data);
   //     },
@@ -84,7 +83,7 @@ class _NfcPageState extends State<NfcPage> {
   // --- UI WIDGETS ---
   @override
   Widget build(BuildContext context) {
-    // Halaman ini akan ditampilkan di 'body' home.dart, 
+    // Halaman ini akan ditampilkan di 'body' home.dart,
     // jadi kita hanya butuh SafeArea.
 
     return SafeArea(
@@ -101,10 +100,7 @@ class _NfcPageState extends State<NfcPage> {
                 const SizedBox(height: AppSpacing.xxl),
                 Text(
                   "Selesaikan Absensi dalam",
-                  style: TextStyle(
-                    color: AppColors.textDisabled,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(color: AppColors.textDisabled, fontSize: 16),
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 Text(
@@ -142,20 +138,17 @@ class _NfcPageState extends State<NfcPage> {
         vertical: AppSpacing.md,
       ),
       decoration: BoxDecoration(
-        color: AppColors.primary, // Biru dari design system
+        color: AppColors.primary,
         borderRadius: BorderRadius.circular(AppRadius.button),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.nfc, color: AppColors.textOnPrimary), // Ikon 'N'
+          Icon(Icons.nfc, color: AppColors.textOnPrimary),
           const SizedBox(width: AppSpacing.sm),
           Text(
             "Dekatkan ponsel anda pada kotak absensi",
-            style: TextStyle(
-              color: AppColors.textOnPrimary, // Putih
-              fontSize: 13,
-            ),
+            style: TextStyle(color: AppColors.textOnPrimary, fontSize: 13),
           ),
         ],
       ),
@@ -206,7 +199,10 @@ class _NfcPageState extends State<NfcPage> {
                       ? "Data absensi Anda telah terekam."
                       : "Waktu habis atau device tidak terdeteksi.",
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 14,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.xl),
                 ElevatedButton(

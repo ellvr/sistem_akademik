@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sistem_akademik/design_system.dart';
 
 // ----- Design System -----
 class AppColors {
@@ -18,30 +17,25 @@ class AppColors {
 
   // WARNA Natural text
   static const Color textPrimary = Color(0xFF151515);
-  static const Color textSecondary = Color(0xFF383838); // Abu-abu (54% opacity)
+  static const Color textSecondary = Color(0xFF383838);
   static const Color textOnPrimary = Color(0xFFfefefe);
-  static const Color textDisabled = Color(0xFF757575); // Abu-abu (inactive nav)
+  static const Color textDisabled = Color(0xFF757575);
 
-  // WARNA LAIN-LAIN
   static const Color background = Color(
     0xFFF5F5F5,
   ); // Latar belakang (grey[100])
   static const Color surface = Colors.white; // Latar belakang kartu/kontainer
 
-  //Alert
   static const Color success = Color(0xFF34B83A); // Hijau
   static const Color warning = Color(0xFFF9A825); // Kuning
   static const Color error = Color(0xFFC62828); // Merah
 }
 
-// ----- KUMPULAN GAYA TEKS -----
-
 class AppTextStyles {
   AppTextStyles._();
 
-  // Teks untuk Profil
   static const TextStyle profileName = TextStyle(
-    color: Colors.black, // Teks ini hitam pekat, bukan textPrimary
+    color: Colors.black,
     fontWeight: FontWeight.bold,
     fontSize: 20,
   );
@@ -51,7 +45,6 @@ class AppTextStyles {
     fontSize: 14,
   );
 
-  // Teks untuk Kartu Teal
   static const TextStyle cardTitle = TextStyle(
     color: AppColors.textOnPrimary,
     fontWeight: FontWeight.bold,
@@ -59,7 +52,7 @@ class AppTextStyles {
   );
 
   static const TextStyle cardSubtitle = TextStyle(
-    color: Colors.white70, // Ini spesifik, jadi kita biarkan
+    color: Colors.white70,
     fontSize: 13,
   );
 
@@ -68,7 +61,6 @@ class AppTextStyles {
     fontSize: 13,
   );
 
-  // Teks untuk Pengumuman
   static const TextStyle sectionTitle = TextStyle(
     color: AppColors.accent,
     fontWeight: FontWeight.bold,
@@ -89,23 +81,20 @@ class AppTextStyles {
   static const TextStyle bodyText = TextStyle(
     color: AppColors.textPrimary,
     fontSize: 14,
-    height: 1.4, // Jarak antar baris
+    height: 1.4,
   );
 }
-
-// ----- KUMPULAN JARAK (OPSIONAL, TAPI SANGAT DISARANKAN) -----
 
 class AppSpacing {
   AppSpacing._();
 
-  static const double sm = 8.0; // Jarak kecil
-  static const double md = 12.0; // Jarak sedang
-  static const double lg = 16.0; // Jarak besar (padding vertikal)
-  static const double xl = 20.0; // Jarak ekstra besar (padding horizontal)
-  static const double xxl = 24.0; // Jarak Judul
+  static const double sm = 8.0;
+  static const double md = 12.0;
+  static const double lg = 16.0;
+  static const double xl = 20.0;
+  static const double xxl = 24.0;
 }
 
-// ----- KUMPULAN RADIUS (OPSIONAL) -----
 class AppRadius {
   AppRadius._();
 
