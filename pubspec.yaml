@@ -63,10 +63,10 @@ flutter:
   uses-material-design: true
 
   assets:
-  - lib/assets/
-    # - lib/assets/nfc.svg
-    # - lib/assets/pipo.png
-    # - lib/assets/ub.png
+  - assets/
+    # - assets/nfc.svg
+    # - assets/pipo.png
+    # - assets/ub.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

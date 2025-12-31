@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistem_akademik/design_system.dart';
-import 'package:sistem_akademik/navbar.dart';
+import 'package:sistem_akademik/theme/design_system.dart';
 import 'dart:async';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,27 +13,21 @@ class NfcPage extends StatefulWidget {
 
 class _NfcPageState extends State<NfcPage> {
   Timer? _timer;
-  int _remainingSeconds = 90; // 1 menit 30 detik
+  int _remainingSeconds = 90;
 
   @override
   void initState() {
     super.initState();
-    // Mulai timer saat halaman dibuka
     _startTimer();
-    // Mulai memindai NFC
-    // _startNfcScan();
   }
 
   @override
   void dispose() {
-    // Selalu batalkan timer saat halaman ditutup
     _timer?.cancel();
-    // Hentikan sesi NFC
     NfcManager.instance.stopSession();
     super.dispose();
   }
 
-  // --- LOGIKA TIMER ---
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_remainingSeconds > 0) {
@@ -43,52 +36,20 @@ class _NfcPageState extends State<NfcPage> {
         });
       } else {
         _timer?.cancel();
-        // Tampilkan popup gagal jika waktu habis
         _showResultDialog(isSuccess: false);
       }
     });
   }
 
-  // Helper untuk format waktu 01:29
   String _formatDuration(int seconds) {
     final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
     final remainingSeconds = (seconds % 60).toString().padLeft(2, '0');
     return '$minutes:$remainingSeconds';
   }
 
-  // --- LOGIKA NFC ---
-  // void _startNfcScan() {
-  //   NfcManager.instance.startSession(
-  //     onDiscovered: (NfcTag tag) async {
-  //       // --- SUKSES ---
-  //       // Hentikan timer & sesi
-  //       _timer?.cancel();
-  //       NfcManager.instance.stopSession();
-
-  //       // Tampilkan popup sukses
-  //       _showResultDialog(isSuccess: true);
-
-  //       // Di sini Anda bisa memproses data 'tag'
-  //       // print(tag.data);
-  //     },
-  //     onError: (e) async {
-  //       // --- GAGAL (dari NFC) ---
-  //       _timer?.cancel();
-  //       NfcManager.instance.stopSession();
-  //       _showResultDialog(isSuccess: false);
-  //     },
-  //   );
-  // }
-
-  // --- UI WIDGETS ---
   @override
   Widget build(BuildContext context) {
-    // Halaman ini akan ditampilkan di 'body' home.dart,
-    // jadi kita hanya butuh SafeArea.
-
     return SafeArea(
-      // backgroundColor: AppColors.surface,
-      // child: SafeArea(
       child: Column(
         children: [
           _buildTopBanner(),
@@ -111,20 +72,15 @@ class _NfcPageState extends State<NfcPage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 60), // Beri jarak dari bawah
+                const SizedBox(height: 60),
               ],
             ),
           ),
         ],
       ),
-      // ),
-      //  bottomNavigationBar: const BottomNavBar(
-      //   initialIndex: 2,
-      //  )
     );
   }
 
-  // Helper untuk banner di bagian atas
   Widget _buildTopBanner() {
     return Container(
       margin: const EdgeInsets.fromLTRB(
@@ -155,24 +111,16 @@ class _NfcPageState extends State<NfcPage> {
     );
   }
 
-  // Helper untuk grafis NFC di tengah
   Widget _buildNfcGraphic() {
-    return SvgPicture.asset(
-      'lib/assets/nfc.svg', // Path ke file SVG Anda
-      height: 400, // Sesuaikan ukuran sesuai kebutuhan
-      width: 400,
-      // colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn), // Mengganti warna SVG ke primary color
-    );
+    return SvgPicture.asset('assets/nfc.svg', height: 400, width: 400);
   }
 
-  // --- LOGIKA POPUP ---
   void _showResultDialog({required bool isSuccess}) {
-    // Pastikan dialog tampil di context yang benar
     if (!mounted) return;
 
     showDialog(
       context: context,
-      barrierDismissible: false, // User tidak bisa skip
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -191,7 +139,7 @@ class _NfcPageState extends State<NfcPage> {
                 const SizedBox(height: AppSpacing.lg),
                 Text(
                   isSuccess ? "Absensi Berhasil" : "Absensi Gagal",
-                  style: AppTextStyles.profileName, // Style dari design system
+                  style: AppTextStyles.profileName,
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 Text(
@@ -212,10 +160,7 @@ class _NfcPageState extends State<NfcPage> {
                     minimumSize: const Size(double.infinity, 44),
                   ),
                   onPressed: () {
-                    // Tutup popup
                     Navigator.pop(context);
-                    // TODO: Arahkan user kembali ke Home
-                    // (Ini perlu callback ke home.dart untuk ganti index)
                   },
                   child: const Text("OK"),
                 ),

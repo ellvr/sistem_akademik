@@ -1,34 +1,28 @@
 import 'package:flutter/material.dart';
 
-// ----- Design System -----
 class AppColors {
   AppColors._();
 
-  // WARNA Primary
-  static const Color primary = Color(0xFF0482A8); // Blue Normal:active
-  static const Color secondary = Color(0xFF05A3D2); // Blue Normal
-  static const Color dark = Color(0xFF047A9E); // Blue Dark
-  static const Color darker = Color(0xFF02394A); // Blue Darker
-  static const Color lightActive = Color(0xFFB2E2F1); // Blue Light:Active
+  static const Color primary = Color(0xFF0482A8);
+  static const Color secondary = Color(0xFF05A3D2);
+  static const Color dark = Color(0xFF047A9E);
+  static const Color darker = Color(0xFF02394A);
+  static const Color lightActive = Color(0xFFB2E2F1);
 
-  //Warna Accent
   static const Color accent = Color(0xFFF4741B);
   static const Color light = Color(0xFFFCD4B8);
 
-  // WARNA Natural text
   static const Color textPrimary = Color(0xFF151515);
   static const Color textSecondary = Color(0xFF383838);
   static const Color textOnPrimary = Color(0xFFfefefe);
   static const Color textDisabled = Color(0xFF757575);
 
-  static const Color background = Color(
-    0xFFF5F5F5,
-  ); // Latar belakang (grey[100])
-  static const Color surface = Colors.white; // Latar belakang kartu/kontainer
+  static const Color background = Color(0xFFFBFBFB);
+  static const Color surface = Colors.white;
 
-  static const Color success = Color(0xFF34B83A); // Hijau
-  static const Color warning = Color(0xFFF9A825); // Kuning
-  static const Color error = Color(0xFFC62828); // Merah
+  static const Color success = Color(0xFF34B83A);
+  static const Color warning = Color(0xFFF9A825);
+  static const Color error = Color(0xFFC62828);
 }
 
 class AppTextStyles {

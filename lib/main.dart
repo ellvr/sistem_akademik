@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:sistem_akademik/home.dart';
-import 'splash_screen.dart';
-import 'login_screen.dart';
-import 'profile_screen.dart';
-import 'register_screen.dart';
-import 'onboarding_screen.dart';
+import 'package:sistem_akademik/screens/home.dart';
+import 'screens/splash_screen.dart';
+import 'screens/auth/login_screen.dart';
+import 'screens/profile_screen.dart';
+import 'screens/auth/register_screen.dart';
+import 'screens/onboarding_screen.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,7 +1,8 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:sistem_akademik/design_system.dart';
-// Hapus import yang tidak perlu
+import 'package:sistem_akademik/theme/design_system.dart';
 
 class MyQrCodeScreen extends StatelessWidget {
   const MyQrCodeScreen({super.key});
@@ -11,11 +12,8 @@ class MyQrCodeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // [PERBAIKAN] Tambahkan Scaffold di sini.
-    // Halaman ini adalah halaman BARU, jadi dia butuh Scaffold-nya sendiri
-    // untuk punya AppBar dan background.
     return Scaffold(
-      backgroundColor: AppColors.background, // Set background
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text("QR Code Saya"),
         backgroundColor: AppColors.primary,
@@ -63,7 +61,9 @@ class MyQrCodeScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: AppSpacing.xxl),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.xl,
+                      ),
                       child: Text(
                         "Gunakan QR Code ini untuk menampilkan data mahasiswa.",
                         textAlign: TextAlign.center,
@@ -78,22 +78,13 @@ class MyQrCodeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            
-            // [PERBAIKAN] Hapus tombol 'Switch to Scanner'
-            // Center(
-            //   child: _buildBottomControls(context),
-            // ),
           ],
         ),
       ),
     );
   }
 
-  // [PERBAIKAN] HAPUS FUNGSI _buildBottomControls
-  // Widget _buildBottomControls(BuildContext context) { ... }
-
   Widget _buildTopBanner() {
-    // ... (Kode _buildTopBanner Anda tidak berubah) ...
     return Container(
       margin: const EdgeInsets.fromLTRB(
         AppSpacing.xl,
@@ -116,10 +107,7 @@ class MyQrCodeScreen extends StatelessWidget {
           const SizedBox(width: AppSpacing.sm),
           Text(
             "Tingkatkan kecerahan layar",
-            style: TextStyle(
-              color: AppColors.textOnPrimary,
-              fontSize: 13,
-            ),
+            style: TextStyle(color: AppColors.textOnPrimary, fontSize: 13),
           ),
         ],
       ),

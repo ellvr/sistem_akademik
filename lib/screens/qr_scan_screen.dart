@@ -1,7 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:qr_flutter/qr_flutter.dart'; // <-- TAMBAHKAN IMPORT INI
-import 'package:sistem_akademik/design_system.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:sistem_akademik/theme/design_system.dart';
 
 class QrScanScreen extends StatefulWidget {
   const QrScanScreen({super.key});
@@ -11,32 +13,25 @@ class QrScanScreen extends StatefulWidget {
 }
 
 class _QrScanScreenState extends State<QrScanScreen> {
-  // State untuk mengontrol tampilan: true = Scanner, false = Tampil QR
   bool _isScanning = true;
-  
-  // Controller untuk kamera
   final MobileScannerController cameraController = MobileScannerController();
 
   @override
   void dispose() {
-    // Selalu matikan kamera saat halaman ini dihancurkan
     cameraController.dispose();
     super.dispose();
   }
 
-  // Fungsi untuk mengganti halaman
   void _togglePage(bool isScanningPage) {
-    if (_isScanning == isScanningPage) return; // Tidak perlu ganti jika sama
+    if (_isScanning == isScanningPage) return;
 
     setState(() {
       _isScanning = isScanningPage;
     });
 
     if (isScanningPage) {
-      // Jika pindah ke 'Scan', nyalakan kamera
       cameraController.start();
     } else {
-      // Jika pindah ke 'Tampil QR', matikan kamera (PENTING!)
       cameraController.stop();
     }
   }
@@ -46,21 +41,13 @@ class _QrScanScreenState extends State<QrScanScreen> {
     return SafeArea(
       child: Column(
         children: [
-          // 1. Banner Atas yang berisi TOGGLE SWITCH
           _buildToggleSwitch(),
-          
-          // 2. Konten Halaman (Scanner atau Tampil QR)
-          Expanded(
-            child: _isScanning
-                ? _buildScannerUi()  // Tampilkan UI Scanner
-                : _buildMyQrUi(),     // Tampilkan UI Tampil QR
-          ),
+          Expanded(child: _isScanning ? _buildScannerUi() : _buildMyQrUi()),
         ],
       ),
     );
   }
 
-  // --- WIDGET UNTUK TOGGLE SWITCH (SESUAI GAMBAR ANDA) ---
   Widget _buildToggleSwitch() {
     return Container(
       width: double.infinity,
@@ -70,12 +57,11 @@ class _QrScanScreenState extends State<QrScanScreen> {
       ),
       padding: const EdgeInsets.all(AppSpacing.sm / 2),
       decoration: BoxDecoration(
-        color: Colors.grey[200], // Warna latar toggle
+        color: Colors.grey[200],
         borderRadius: BorderRadius.circular(AppRadius.button),
       ),
       child: Row(
         children: [
-          // Tombol "Scan QR"
           Expanded(
             child: GestureDetector(
               onTap: () => _togglePage(true),
@@ -85,13 +71,15 @@ class _QrScanScreenState extends State<QrScanScreen> {
                 decoration: BoxDecoration(
                   color: _isScanning ? AppColors.surface : Colors.transparent,
                   borderRadius: BorderRadius.circular(AppRadius.button),
-                  boxShadow: _isScanning ? [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    )
-                  ] : [],
+                  boxShadow: _isScanning
+                      ? [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ]
+                      : [],
                 ),
                 child: Center(
                   child: Text(
@@ -107,8 +95,6 @@ class _QrScanScreenState extends State<QrScanScreen> {
               ),
             ),
           ),
-          
-          // Tombol "Create QRIS"
           Expanded(
             child: GestureDetector(
               onTap: () => _togglePage(false),
@@ -118,13 +104,15 @@ class _QrScanScreenState extends State<QrScanScreen> {
                 decoration: BoxDecoration(
                   color: !_isScanning ? AppColors.surface : Colors.transparent,
                   borderRadius: BorderRadius.circular(AppRadius.button),
-                  boxShadow: !_isScanning ? [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    )
-                  ] : [],
+                  boxShadow: !_isScanning
+                      ? [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ]
+                      : [],
                 ),
                 child: Center(
                   child: Text(
@@ -145,9 +133,7 @@ class _QrScanScreenState extends State<QrScanScreen> {
     );
   }
 
-  // --- UI UNTUK HALAMAN SCANNER ---
   Widget _buildScannerUi() {
-    // Ini adalah UI scanner Anda sebelumnya, tanpa banner atas
     return Stack(
       children: [
         MobileScanner(
@@ -156,9 +142,9 @@ class _QrScanScreenState extends State<QrScanScreen> {
             final List<Barcode> barcodes = capture.barcodes;
             if (barcodes.isNotEmpty) {
               final String code = barcodes.first.rawValue ?? 'Tidak ada data';
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('QR Ditemukan: $code')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('QR Ditemukan: $code')));
             }
           },
         ),
@@ -170,16 +156,11 @@ class _QrScanScreenState extends State<QrScanScreen> {
             scanWindowRadius: AppRadius.button,
           ),
         ),
-        // Kita HILANGKAN _buildTopBanner() karena sudah diganti _buildToggleSwitch
-        
-        // Kontrol bawah (flash, dll) tetap ada
         _buildScannerBottomControls(),
       ],
     );
   }
 
-  // --- UI UNTUK HALAMAN TAMPIL QR ---
-  // (Ini adalah konten dari my_qr_code_screen.dart)
   Widget _buildMyQrUi() {
     const String nim = "235150601111012";
     const String qrData = "mahasiswanim:235150601111012";
@@ -187,8 +168,6 @@ class _QrScanScreenState extends State<QrScanScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Kita HILANGKAN banner atas karena sudah diganti _buildToggleSwitch
-        
         Text(
           "Nim : $nim",
           style: TextStyle(
@@ -235,7 +214,6 @@ class _QrScanScreenState extends State<QrScanScreen> {
     );
   }
 
-  // --- KONTROL BAWAH UNTUK SCANNER ---
   Widget _buildScannerBottomControls() {
     return Positioned(
       bottom: 40,
@@ -244,36 +222,6 @@ class _QrScanScreenState extends State<QrScanScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          // Tombol Galeri
-          // IconButton(
-          //   icon: Icon(
-          //     Icons.image_outlined, // Ikon galeri
-          //     color: AppColors.surface,
-          //     size: 32,
-          //   ),
-          //   onPressed: () {
-          //     // TODO: Implementasi ambil QR dari galeri
-          //   },
-          // ),
-          
-          // Tombol Shutter (Placeholder)
-          // Container(
-          //   decoration: BoxDecoration(
-          //     shape: BoxShape.circle,
-          //     border: Border.all(color: AppColors.surface, width: 3),
-          //   ),
-          //   padding: const EdgeInsets.all(AppSpacing.sm / 2),
-          //   child: Container(
-          //     width: 60,
-          //     height: 60,
-          //     decoration: BoxDecoration(
-          //       shape: BoxShape.circle,
-          //       color: AppColors.surface,
-          //     ),
-          //   ),
-          // ),
-          
-          // Tombol Flash
           ValueListenableBuilder(
             valueListenable: cameraController,
             builder: (context, state, child) {
@@ -292,8 +240,6 @@ class _QrScanScreenState extends State<QrScanScreen> {
   }
 }
 
-// --- KELAS HELPER UNTUK OVERLAY SCANNER ---
-// (Tidak ada perubahan)
 class QRScannerOverlay extends CustomPainter {
   final double scanWindowSize;
   final double scanWindowRadius;
@@ -311,7 +257,6 @@ class QRScannerOverlay extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // ... (kode paint Anda)
     final double screenWidth = size.width;
     final double screenHeight = size.height;
     final Rect scanRect = Rect.fromCenter(
@@ -337,7 +282,6 @@ class QRScannerOverlay extends CustomPainter {
       ),
       backgroundPaint,
     );
-    // ... (sisa kode paint Anda)
     canvas.drawPath(
       Path()
         ..moveTo(scanRect.left, scanRect.top + cornerLength)
@@ -367,6 +311,7 @@ class QRScannerOverlay extends CustomPainter {
       borderPaint,
     );
   }
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

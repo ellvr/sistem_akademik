@@ -9,12 +9,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   static const Color headerColor = Color(0xFFC7E6F0);
   static const Color primaryButtonColor = Color(0xFF0482A8);
 
   final TextEditingController _nimEmailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _obscurePassword = true;
 
   @override
   void dispose() {
@@ -22,14 +22,13 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController.dispose();
     super.dispose();
   }
-  
+
   void _handleLogin(BuildContext context) async {
-    // [LOGIC LOGIN]
-    if (_nimEmailController.text.isNotEmpty && _passwordController.text.isNotEmpty) {
+    if (_nimEmailController.text.isNotEmpty &&
+        _passwordController.text.isNotEmpty) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
-      
-      // Mengganti route ke '/home'
+
       Navigator.of(context).pushReplacementNamed('/home');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -45,12 +44,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      extendBodyBehindAppBar: true, 
+      extendBodyBehindAppBar: true,
       body: Stack(
         children: [
           Positioned.fill(
             child: Image.asset(
-              'lib/assets/login.png',
+              'assets/login.png',
               fit: BoxFit.fitWidth,
               alignment: Alignment.topCenter,
             ),
@@ -67,7 +66,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   color: Colors.white,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 30,
+                  vertical: 40,
+                ),
                 child: Column(
                   children: [
                     const Text(
@@ -84,7 +86,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                     const SizedBox(height: 30),
-
                     _buildTextField(
                       controller: _nimEmailController,
                       label: 'NIM/Email',
@@ -93,23 +94,30 @@ class _LoginScreenState extends State<LoginScreen> {
                       icon: Icons.person_outline,
                     ),
                     const SizedBox(height: 20),
-
                     _buildTextField(
                       controller: _passwordController,
                       label: 'Password',
                       hint: '••••••••',
                       isPassword: true,
+                      obscureText: _obscurePassword,
                       icon: Icons.lock_outline,
+                      onTogglePassword: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
                       suffixWidget: InkWell(
                         onTap: () {},
                         child: const Text(
                           'Lupa password?',
-                          style: TextStyle(color: primaryButtonColor, fontSize: 13),
+                          style: TextStyle(
+                            color: primaryButtonColor,
+                            fontSize: 13,
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 40),
-
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -117,25 +125,33 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () => _handleLogin(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: primaryButtonColor,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
-                        child: const Text('Masuk', style: TextStyle(fontSize: 18, color: Colors.white)),
+                        child: const Text(
+                          'Masuk',
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 15),
-
                     Row(
                       children: const [
-                        Expanded(child: Divider(color: Colors.grey, height: 36)),
+                        Expanded(
+                          child: Divider(color: Colors.grey, height: 36),
+                        ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Text('Atau', style: TextStyle(color: Colors.grey)),
+                          child: Text(
+                            'Atau',
+                            style: TextStyle(color: Colors.grey),
+                          ),
                         ),
                         Expanded(child: Divider(color: Colors.grey)),
                       ],
                     ),
                     const SizedBox(height: 15),
-
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -143,27 +159,37 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () {},
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: Colors.grey),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(
                               height: 24,
-                              child: Image.asset('lib/assets/google.png'),
+                              child: Image.asset('assets/google.png'),
                             ),
                             const SizedBox(width: 10),
-                            const Text('Masuk dengan Google', style: TextStyle(fontSize: 16, color: primaryButtonColor)),
+                            const Text(
+                              'Masuk dengan Google',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: primaryButtonColor,
+                              ),
+                            ),
                           ],
                         ),
                       ),
                     ),
                     const SizedBox(height: 40),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text('Belum Punya Akun? ', style: TextStyle(color: Colors.black54)),
+                        const Text(
+                          'Belum Punya Akun? ',
+                          style: TextStyle(color: Colors.black54),
+                        ),
                         InkWell(
                           onTap: () {
                             Navigator.of(context).pushNamed('/register');
@@ -194,6 +220,8 @@ class _LoginScreenState extends State<LoginScreen> {
     required String hint,
     TextInputType keyboardType = TextInputType.text,
     bool isPassword = false,
+    bool obscureText = false,
+    VoidCallback? onTogglePassword,
     IconData? icon,
     Widget? suffixWidget,
   }) {
@@ -203,11 +231,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              '$label',
-              style: const TextStyle(color: primaryButtonColor),
-            ),
-            
+            Text('$label', style: const TextStyle(color: primaryButtonColor)),
             if (suffixWidget != null) suffixWidget,
           ],
         ),
@@ -215,14 +239,26 @@ class _LoginScreenState extends State<LoginScreen> {
         TextField(
           controller: controller,
           keyboardType: keyboardType,
-          obscureText: isPassword,
+          obscureText: isPassword ? obscureText : false,
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: Icon(icon, color: Colors.grey),
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      obscureText ? Icons.visibility_off : Icons.visibility,
+                      color: Colors.grey,
+                    ),
+                    onPressed: onTogglePassword,
+                  )
+                : null,
             hintStyle: const TextStyle(color: Colors.grey),
             filled: true,
             fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 15,
+              horizontal: 10,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: const BorderSide(color: Color(0xFFD9D9D9), width: 1),

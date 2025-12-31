@@ -1,9 +1,7 @@
+// ignore_for_file: use_super_parameters, library_private_types_in_public_api, deprecated_member_use
+
 import 'package:flutter/material.dart';
-import 'package:sistem_akademik/design_system.dart';
-import 'package:sistem_akademik/nfc_page.dart';
-import 'package:sistem_akademik/qr_scan_screen.dart';
-import 'package:sistem_akademik/home.dart';
-import 'package:sistem_akademik/schedule.dart';
+import 'package:sistem_akademik/theme/design_system.dart';
 
 class BottomNavBar extends StatefulWidget {
   final ValueChanged<int>? onItemTapped;

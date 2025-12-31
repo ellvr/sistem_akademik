@@ -15,19 +15,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<Map<String, String>> _onboardingData = [
     {
-      'image': 'lib/assets/onboarding_1.png',
+      'image': 'assets/onboarding_1.png',
       'title': 'Selamat Datang di SIAM!',
       'description':
           'Absen kuliah lebih mudah dengan melakukan scan QR yang terdapat di setiap kelas.',
     },
     {
-      'image': 'lib/assets/onboarding_2.png',
+      'image': 'assets/onboarding_2.png',
       'title': 'Pantau langsung jadwal kuliah dan presensi',
       'description':
           'Periksa daftar mata kuliah, dosen pengampu, hingga ruangan kelas secara real-time.',
     },
     {
-      'image': 'lib/assets/onboarding_3.png',
+      'image': 'assets/onboarding_3.png',
       'title': 'Lebih praktis, lebih transparan',
       'description':
           'Kamu bisa melihat riwayat presensi kapan saja, tanpa perlu takut ketinggalan presensi',
