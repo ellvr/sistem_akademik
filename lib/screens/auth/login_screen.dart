@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, unnecessary_string_interpolations
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,7 +11,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  static const Color headerColor = Color(0xFFC7E6F0);
   static const Color primaryButtonColor = Color(0xFF0482A8);
 
   final TextEditingController _nimEmailController = TextEditingController();
@@ -86,38 +87,44 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                     const SizedBox(height: 30),
-                    _buildTextField(
-                      controller: _nimEmailController,
-                      label: 'NIM/Email',
-                      hint: 'Masukkan NIM atau email...',
-                      keyboardType: TextInputType.emailAddress,
-                      icon: Icons.person_outline,
-                    ),
-                    const SizedBox(height: 20),
-                    _buildTextField(
-                      controller: _passwordController,
-                      label: 'Password',
-                      hint: '••••••••',
-                      isPassword: true,
-                      obscureText: _obscurePassword,
-                      icon: Icons.lock_outline,
-                      onTogglePassword: () {
-                        setState(() {
-                          _obscurePassword = !_obscurePassword;
-                        });
-                      },
-                      suffixWidget: InkWell(
-                        onTap: () {},
-                        child: const Text(
-                          'Lupa password?',
-                          style: TextStyle(
-                            color: primaryButtonColor,
-                            fontSize: 13,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        _buildTextField(
+                          controller: _nimEmailController,
+                          label: 'NIM/Email',
+                          hint: 'Masukkan NIM atau email...',
+                          keyboardType: TextInputType.emailAddress,
+                          icon: Icons.person_outline,
+                        ),
+                        const SizedBox(height: 20),
+                        _buildTextField(
+                          controller: _passwordController,
+                          label: 'Password',
+                          hint: '••••••••',
+                          isPassword: true,
+                          obscureText: _obscurePassword,
+                          icon: Icons.lock_outline,
+                          onTogglePassword: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 15),
+                        InkWell(
+                          onTap: () {},
+                          child: const Text(
+                            'Lupa password?',
+                            style: TextStyle(
+                              color: primaryButtonColor,
+                              fontSize: 13,
+                            ),
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 30),
+                      ],
                     ),
-                    const SizedBox(height: 40),
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -136,74 +143,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 15),
-                    Row(
-                      children: const [
-                        Expanded(
-                          child: Divider(color: Colors.grey, height: 36),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Text(
-                            'Atau',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                        Expanded(child: Divider(color: Colors.grey)),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: OutlinedButton(
-                        onPressed: () {},
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Colors.grey),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 24,
-                              child: Image.asset('assets/google.png'),
-                            ),
-                            const SizedBox(width: 10),
-                            const Text(
-                              'Masuk dengan Google',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: primaryButtonColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Belum Punya Akun? ',
-                          style: TextStyle(color: Colors.black54),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).pushNamed('/register');
-                          },
-                          child: const Text(
-                            'Daftar',
-                            style: TextStyle(
-                              color: primaryButtonColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
@@ -231,7 +170,12 @@ class _LoginScreenState extends State<LoginScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('$label', style: const TextStyle(color: primaryButtonColor)),
+            Row(
+              children: [
+                Text(label, style: const TextStyle(color: primaryButtonColor)),
+                const Text(' *', style: TextStyle(color: Colors.red)),
+              ],
+            ),
             if (suffixWidget != null) suffixWidget,
           ],
         ),

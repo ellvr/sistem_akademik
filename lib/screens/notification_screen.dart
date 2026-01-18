@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:sistem_akademik/theme/design_system.dart';
 import 'package:sistem_akademik/models/notification_model.dart'; // Import modelnya di sini
