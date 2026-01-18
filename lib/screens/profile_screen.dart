@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistem_akademik/theme/design_system.dart';
+import 'package:sistem_akademik/models/user_model.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -110,10 +111,14 @@ class ProfileScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: 50,
-                    backgroundColor: Colors.white,
-                    backgroundImage: AssetImage('assets/pipo.png'),
+                    backgroundColor: AppColors.lightActive,
+                    child: const Icon(
+                      Icons.person,
+                      size: 50,
+                      color: AppColors.primary,
+                    ),
                   ),
                   const SizedBox(height: 10),
                   const Text(

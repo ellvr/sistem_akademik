@@ -23,19 +23,38 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _handleLogin(BuildContext context) async {
-    if (_nimEmailController.text.isNotEmpty &&
-        _passwordController.text.isNotEmpty) {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', true);
+  // void _handleLogin(BuildContext context) async {
+  //   if (_nimEmailController.text.isNotEmpty &&
+  //       _passwordController.text.isNotEmpty) {
+  //     final prefs = await SharedPreferences.getInstance();
+  //     await prefs.setBool('isLoggedIn', true);
 
-      Navigator.of(context).pushReplacementNamed('/home');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('NIM/Email dan Password harus diisi')),
-      );
-    }
+  //     Navigator.of(context).pushReplacementNamed('/home');
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('NIM/Email dan Password harus diisi')),
+  //     );
+  //   }
+  // }
+  void _handleLogin(BuildContext context) async {
+  if (_nimEmailController.text.isNotEmpty &&
+      _passwordController.text.isNotEmpty) {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', true);
+
+    // TAMBAHKAN PENGECEKAN INI
+    if (!mounted) return; 
+
+    Navigator.of(context).pushReplacementNamed('/home');
+  } else {
+    // TAMBAHKAN JUGA DI SINI
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('NIM/Email dan Password harus diisi')),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -86,15 +105,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                     const SizedBox(height: 30),
+
+                    /// NIM / EMAIL
                     _buildTextField(
+                      key: const Key('emailField'),
                       controller: _nimEmailController,
                       label: 'NIM/Email',
                       hint: 'Masukkan NIM atau email...',
                       keyboardType: TextInputType.emailAddress,
                       icon: Icons.person_outline,
                     ),
+
                     const SizedBox(height: 20),
+
+                    /// PASSWORD
                     _buildTextField(
+                      key: const Key('passwordField'),
                       controller: _passwordController,
                       label: 'Password',
                       hint: '••••••••',
@@ -117,11 +143,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 40),
+
+                    /// LOGIN BUTTON
                     SizedBox(
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
+                        key: const Key('loginButton'),
                         onPressed: () => _handleLogin(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: primaryButtonColor,
@@ -135,34 +165,26 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 15),
                     Row(
                       children: const [
-                        Expanded(
-                          child: Divider(color: Colors.grey, height: 36),
-                        ),
+                        Expanded(child: Divider(color: Colors.grey, height: 36)),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Text(
-                            'Atau',
-                            style: TextStyle(color: Colors.grey),
-                          ),
+                          child: Text('Atau',
+                              style: TextStyle(color: Colors.grey)),
                         ),
                         Expanded(child: Divider(color: Colors.grey)),
                       ],
                     ),
+
                     const SizedBox(height: 15),
                     SizedBox(
                       width: double.infinity,
                       height: 50,
                       child: OutlinedButton(
                         onPressed: () {},
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Colors.grey),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -182,6 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 40),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -215,6 +238,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildTextField({
+    Key? key,
     required TextEditingController controller,
     required String label,
     required String hint,
@@ -231,12 +255,13 @@ class _LoginScreenState extends State<LoginScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('$label', style: const TextStyle(color: primaryButtonColor)),
+            Text(label, style: const TextStyle(color: primaryButtonColor)),
             if (suffixWidget != null) suffixWidget,
           ],
         ),
         const SizedBox(height: 5),
         TextField(
+          key: key,
           controller: controller,
           keyboardType: keyboardType,
           obscureText: isPassword ? obscureText : false,
@@ -246,30 +271,18 @@ class _LoginScreenState extends State<LoginScreen> {
             suffixIcon: isPassword
                 ? IconButton(
                     icon: Icon(
-                      obscureText ? Icons.visibility_off : Icons.visibility,
+                      obscureText
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                       color: Colors.grey,
                     ),
                     onPressed: onTogglePassword,
                   )
                 : null,
-            hintStyle: const TextStyle(color: Colors.grey),
             filled: true,
             fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(
-              vertical: 15,
-              horizontal: 10,
-            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFFD9D9D9), width: 1),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.grey, width: 1),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: primaryButtonColor, width: 1),
             ),
           ),
         ),
