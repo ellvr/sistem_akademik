@@ -24,38 +24,23 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  // void _handleLogin(BuildContext context) async {
-  //   if (_nimEmailController.text.isNotEmpty &&
-  //       _passwordController.text.isNotEmpty) {
-  //     final prefs = await SharedPreferences.getInstance();
-  //     await prefs.setBool('isLoggedIn', true);
-
-  //     Navigator.of(context).pushReplacementNamed('/home');
-  //   } else {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(content: Text('NIM/Email dan Password harus diisi')),
-  //     );
-  //   }
-  // }
   void _handleLogin(BuildContext context) async {
-  if (_nimEmailController.text.isNotEmpty &&
-      _passwordController.text.isNotEmpty) {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', true);
+    if (_nimEmailController.text.isNotEmpty &&
+        _passwordController.text.isNotEmpty) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
 
-    // TAMBAHKAN PENGECEKAN INI
-    if (!mounted) return; 
+      if (!mounted) return;
 
-    Navigator.of(context).pushReplacementNamed('/home');
-  } else {
-    // TAMBAHKAN JUGA DI SINI
-    if (!mounted) return;
+      Navigator.of(context).pushReplacementNamed('/home');
+    } else {
+      if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('NIM/Email dan Password harus diisi')),
-    );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('NIM/Email dan Password harus diisi')),
+      );
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -270,9 +255,7 @@ class _LoginScreenState extends State<LoginScreen> {
             suffixIcon: isPassword
                 ? IconButton(
                     icon: Icon(
-                      obscureText
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                      obscureText ? Icons.visibility_off : Icons.visibility,
                       color: Colors.grey,
                     ),
                     onPressed: onTogglePassword,
@@ -280,9 +263,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 : null,
             filled: true,
             fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           ),
         ),
       ],
