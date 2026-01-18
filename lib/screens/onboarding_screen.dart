@@ -60,7 +60,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           Container(
             padding: EdgeInsets.fromLTRB(
-                30, 20, 30, MediaQuery.of(context).padding.bottom + 20),
+                30, 20, 30, MediaQuery.of(context).padding.bottom + 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

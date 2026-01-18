@@ -21,15 +21,44 @@ class _NfcPageState extends State<NfcPage> {
     _startTimer();
   }
 
+  // @override
+  // void dispose() {
+  //   _timer?.cancel();
+  //   NfcManager.instance.stopSession();
+  //   super.dispose();
+  // }
   @override
-  void dispose() {
-    _timer?.cancel();
-    NfcManager.instance.stopSession();
-    super.dispose();
-  }
+// void dispose() {
+//   _timer?.cancel();
+//   try {
+//     NfcManager.instance.stopSession();
+//   } catch (_) {
+//     // Abaikan error jika hardware NFC tidak ditemukan
+//   }
+//   super.dispose();
+// }
+
+  // void _startTimer() {
+  //   _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+  //     if (_remainingSeconds > 0) {
+  //       setState(() {
+  //         _remainingSeconds--;
+  //       });
+  //     } else {
+  //       _timer?.cancel();
+  //       _showResultDialog(isSuccess: false);
+  //     }
+  //   });
+  // }
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      // TAMBAHKAN BARIS INI
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+
       if (_remainingSeconds > 0) {
         setState(() {
           _remainingSeconds--;
