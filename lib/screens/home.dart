@@ -5,7 +5,7 @@ import 'package:sistem_akademik/screens/nfc_page.dart';
 import 'package:sistem_akademik/screens/notification_screen.dart';
 import 'package:sistem_akademik/screens/profile_screen.dart';
 import 'package:sistem_akademik/screens/qr_scan_screen.dart';
-import 'package:sistem_akademik/screens/schedule.dart';
+import 'package:sistem_akademik/screens/riwayat_screen.dart';
 import 'package:sistem_akademik/theme/design_system.dart';
 import 'package:sistem_akademik/models/user_model.dart';
 import 'package:sistem_akademik/models/announcement_model.dart';
@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
       _buildDashboardContent(),
       const QrScanScreen(),
       const NfcPage(),
-      const SchedulePage(),
+      const RiwayatScreen(),
       const ProfileScreen(),
     ];
 

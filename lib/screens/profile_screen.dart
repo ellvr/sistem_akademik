@@ -2,14 +2,24 @@
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sistem_akademik/screens/edit_profile_screen.dart';
 import 'package:sistem_akademik/theme/design_system.dart';
-import 'package:sistem_akademik/models/user_model.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   static const Color primaryButtonColor = Color(0xFF0482A8);
   static const Color textFieldBorderColor = Color(0xFFD9D9D9);
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  String userName = "Firza Aurel";
+  String tempatLahir = "Malang, Jawa Timur";
+  String alamat = "Jl. Terusan Cikampek, No 110";
+  String noHp = "081234567890";
 
   void _showLogoutDialog(BuildContext context) {
     showDialog(
@@ -59,12 +69,15 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const SizedBox(width: 20),
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () => Navigator.of(context).pop(),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 15),
-                          side: const BorderSide(color: textFieldBorderColor),
+                          side: const BorderSide(
+                            color: ProfileScreen.textFieldBorderColor,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -97,20 +110,21 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
-    final double headerHeight = screenHeight * 0.35;
+    final double headerHeight = screenHeight * 0.28;
     final double overlapRadius = 28;
 
     return Scaffold(
-      backgroundColor: primaryButtonColor,
+      backgroundColor: ProfileScreen.primaryButtonColor,
+      appBar: AppBar(
+        backgroundColor: ProfileScreen.primaryButtonColor,
+        elevation: 0,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: headerHeight,
               width: double.infinity,
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + 20,
-              ),
               child: Column(
                 children: [
                   CircleAvatar(
@@ -123,9 +137,9 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    'Firza Aurel',
-                    style: TextStyle(
+                  Text(
+                    userName,
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -133,7 +147,23 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final result = await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              EditProfileScreen(currentName: userName),
+                        ),
+                      );
+
+                      if (result != null && result is Map<String, String>) {
+                        setState(() {
+                          userName = result['nama']!;
+                          tempatLahir = result['tempatLahir']!;
+                          alamat = result['alamat']!;
+                          noHp = result['noHp']!;
+                        });
+                      }
+                    },
                     icon: const Icon(Icons.edit, size: 18),
                     label: const Text('Edit Profil'),
                     style: ElevatedButton.styleFrom(
@@ -147,73 +177,64 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Transform.translate(
-              offset: const Offset(0, 0),
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(overlapRadius),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(overlapRadius),
+                ),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildReadOnlyField(label: 'Nim', value: '235150401111033'),
+                  _buildReadOnlyField(
+                    label: 'Email',
+                    value: 'firzaaurel@student.ub.ac.id',
                   ),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                  vertical: 20,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildReadOnlyField(label: 'Nim', value: '235150401111033'),
-                    _buildReadOnlyField(
-                      label: 'Email',
-                      value: 'firzaaurel@student.ub.ac.id',
-                    ),
-                    _buildReadOnlyField(label: 'Nama', value: 'Firza Aurel'),
-                    _buildReadOnlyField(
-                      label: 'Tempat Lahir',
-                      value: 'Malang, Jawa Timur',
-                    ),
-                    _buildReadOnlyField(
-                      label: 'Jenis Kelamin',
-                      value: 'Perempuan',
-                    ),
-                    _buildReadOnlyField(
-                      label: 'Alamat',
-                      value: 'Jl. Terusan Cikampek, No 110',
-                    ),
-                    _buildReadOnlyField(label: 'No. HP', value: '081234567890'),
-                    _buildReadOnlyField(label: 'Angkatan', value: '2023'),
-                    _buildReadOnlyField(
-                      label: 'Status',
-                      value: 'Mahasiswa Aktif',
-                    ),
-                    _buildReadOnlyField(
-                      label: 'Program Studi',
-                      value: 'Pendidikan Teknologi Informasi',
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton.icon(
-                        icon: const Icon(Icons.logout, color: Colors.white),
-                        label: const Text(
-                          'Logout',
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
-                        onPressed: () => _showLogoutDialog(context),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: primaryButtonColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                  _buildReadOnlyField(label: 'Nama', value: userName),
+                  _buildReadOnlyField(
+                    label: 'Tempat Lahir',
+                    value: tempatLahir,
+                  ),
+                  _buildReadOnlyField(
+                    label: 'Jenis Kelamin',
+                    value: 'Perempuan',
+                  ),
+                  _buildReadOnlyField(label: 'Alamat', value: alamat),
+                  _buildReadOnlyField(label: 'No. HP', value: noHp),
+                  _buildReadOnlyField(label: 'Angkatan', value: '2023'),
+                  _buildReadOnlyField(
+                    label: 'Status',
+                    value: 'Mahasiswa Aktif',
+                  ),
+                  _buildReadOnlyField(
+                    label: 'Program Studi',
+                    value: 'Pendidikan Teknologi Informasi',
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.logout, color: Colors.white),
+                      label: const Text(
+                        'Logout',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                      onPressed: () => _showLogoutDialog(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ProfileScreen.primaryButtonColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
               ),
             ),
           ],
@@ -236,7 +257,7 @@ class ProfileScreen extends StatelessWidget {
             label,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
-              color: primaryButtonColor,
+              color: ProfileScreen.primaryButtonColor,
             ),
           ),
           const SizedBox(height: 5),
@@ -245,7 +266,10 @@ class ProfileScreen extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: textFieldBorderColor, width: 1),
+              border: Border.all(
+                color: ProfileScreen.textFieldBorderColor,
+                width: 1,
+              ),
             ),
             width: double.infinity,
             child: Text(

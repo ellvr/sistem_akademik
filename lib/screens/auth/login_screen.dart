@@ -10,35 +10,135 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen>
+    with TickerProviderStateMixin {
   static const Color primaryButtonColor = Color(0xFF0482A8);
 
   final TextEditingController _nimEmailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
+  String? _nimError;
+  String? _passwordError;
+
+  late final AnimationController _loadingController = AnimationController(
+    duration: const Duration(seconds: 2),
+    vsync: this,
+  )..repeat();
+
   @override
   void dispose() {
     _nimEmailController.dispose();
     _passwordController.dispose();
+    _loadingController.dispose();
     super.dispose();
   }
 
+  void _showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 20),
+                RotationTransition(
+                  turns: _loadingController,
+                  child: SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: Stack(
+                      children: List.generate(8, (index) {
+                        return Positioned.fill(
+                          child: RotationTransition(
+                            turns: AlwaysStoppedAnimation(index / 8),
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: Container(
+                                height: 5 + (index * 0.7),
+                                width: 5 + (index * 0.7),
+                                decoration: const BoxDecoration(
+                                  color: primaryButtonColor,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 32),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 235, 244, 247),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Text(
+                    'Loading...',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: primaryButtonColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void _handleLogin(BuildContext context) async {
-    if (_nimEmailController.text.isNotEmpty &&
-        _passwordController.text.isNotEmpty) {
+    final String nimInput = _nimEmailController.text;
+    final String passwordInput = _passwordController.text;
+
+    setState(() {
+      _nimError = null;
+      _passwordError = null;
+
+      if (nimInput.isEmpty) {
+        _nimError = 'Data tidak boleh kosong';
+      } else if (nimInput != '235150600111001') {
+        _nimError = 'NIM/Email tidak valid';
+      }
+
+      if (passwordInput.isEmpty) {
+        _passwordError = 'Data tidak boleh kosong';
+      } else if (passwordInput != '12345678') {
+        _passwordError = 'Password tidak valid';
+      }
+    });
+
+    if (_nimError == null && _passwordError == null) {
+      _showLoadingDialog(context);
+
+      await Future.delayed(const Duration(seconds: 2));
+
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
 
       if (!mounted) return;
 
+      Navigator.of(context).pop();
       Navigator.of(context).pushReplacementNamed('/home');
-    } else {
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('NIM/Email dan Password harus diisi')),
-      );
     }
   }
 
@@ -87,42 +187,50 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 5),
                     const Text(
-                      'Masuk ke akun Kamu',
+                      'Mulai dengan login terlebih dahulu',
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                     const SizedBox(height: 30),
-                    _buildTextField(
-                      controller: _nimEmailController,
-                      label: 'NIM/Email',
-                      hint: 'Masukkan NIM atau email...',
-                      keyboardType: TextInputType.emailAddress,
-                      icon: Icons.person_outline,
-                    ),
-                    const SizedBox(height: 20),
-                    _buildTextField(
-                      controller: _passwordController,
-                      label: 'Password',
-                      hint: '••••••••',
-                      isPassword: true,
-                      obscureText: _obscurePassword,
-                      icon: Icons.lock_outline,
-                      onTogglePassword: () {
-                        setState(() {
-                          _obscurePassword = !_obscurePassword;
-                        });
-                      },
-                      suffixWidget: InkWell(
-                        onTap: () {},
-                        child: const Text(
-                          'Lupa password?',
-                          style: TextStyle(
-                            color: primaryButtonColor,
-                            fontSize: 13,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        _buildTextField(
+                          controller: _nimEmailController,
+                          label: 'NIM/Email UB',
+                          hint: 'Masukkan NIM atau email...',
+                          keyboardType: TextInputType.emailAddress,
+                          icon: Icons.person_outline,
+                          errorText: _nimError,
+                        ),
+                        const SizedBox(height: 20),
+                        _buildTextField(
+                          controller: _passwordController,
+                          label: 'Password',
+                          hint: '••••••••',
+                          isPassword: true,
+                          obscureText: _obscurePassword,
+                          icon: Icons.lock_outline,
+                          errorText: _passwordError,
+                          onTogglePassword: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        InkWell(
+                          onTap: () {},
+                          child: const Text(
+                            'Lupa password?',
+                            style: TextStyle(
+                              color: primaryButtonColor,
+                              fontSize: 13,
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 20),
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -140,76 +248,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
                       ),
-                    ),
-
-                    const SizedBox(height: 15),
-                    Row(
-                      children: const [
-                        Expanded(
-                          child: Divider(color: Colors.grey, height: 36),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Text(
-                            'Atau',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                        Expanded(child: Divider(color: Colors.grey)),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: OutlinedButton(
-                        onPressed: () {},
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Colors.grey),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 24,
-                              child: Image.asset('assets/google.png'),
-                            ),
-                            const SizedBox(width: 10),
-                            const Text(
-                              'Masuk dengan Google',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: primaryButtonColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Belum Punya Akun? ',
-                          style: TextStyle(color: Colors.black54),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).pushNamed('/register');
-                          },
-                          child: const Text(
-                            'Daftar',
-                            style: TextStyle(
-                              color: primaryButtonColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
                     ),
                   ],
                 ),
@@ -232,6 +270,7 @@ class _LoginScreenState extends State<LoginScreen> {
     VoidCallback? onTogglePassword,
     IconData? icon,
     Widget? suffixWidget,
+    String? errorText,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,7 +278,12 @@ class _LoginScreenState extends State<LoginScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('$label', style: const TextStyle(color: primaryButtonColor)),
+            Row(
+              children: [
+                Text(label, style: const TextStyle(color: primaryButtonColor)),
+                const Text(' *', style: TextStyle(color: Colors.red)),
+              ],
+            ),
             if (suffixWidget != null) suffixWidget,
           ],
         ),
@@ -249,6 +293,14 @@ class _LoginScreenState extends State<LoginScreen> {
           controller: controller,
           keyboardType: keyboardType,
           obscureText: isPassword ? obscureText : false,
+          onChanged: (_) {
+            if (errorText != null) {
+              setState(() {
+                if (label.contains('NIM')) _nimError = null;
+                if (label.contains('Password')) _passwordError = null;
+              });
+            }
+          },
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: Icon(icon, color: Colors.grey),
@@ -261,11 +313,41 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: onTogglePassword,
                   )
                 : null,
+            hintStyle: const TextStyle(color: Colors.grey),
             filled: true,
             fillColor: Colors.white,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 15,
+              horizontal: 10,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Color(0xFFD9D9D9), width: 1),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(
+                color: errorText != null ? Colors.red : Colors.grey,
+                width: 1,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(
+                color: errorText != null ? Colors.red : primaryButtonColor,
+                width: 1,
+              ),
+            ),
           ),
         ),
+        if (errorText != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 8, left: 4),
+            child: Text(
+              errorText,
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
       ],
     );
   }

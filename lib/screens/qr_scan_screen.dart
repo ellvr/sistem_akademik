@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:sistem_akademik/screens/riwayat_screen.dart';
 import 'package:sistem_akademik/theme/design_system.dart';
 
 class QrScanScreen extends StatefulWidget {
@@ -14,6 +15,7 @@ class QrScanScreen extends StatefulWidget {
 
 class _QrScanScreenState extends State<QrScanScreen> {
   bool _isScanning = true;
+  bool _hasScanned = false;
   final MobileScannerController cameraController = MobileScannerController();
 
   @override
@@ -27,6 +29,7 @@ class _QrScanScreenState extends State<QrScanScreen> {
 
     setState(() {
       _isScanning = isScanningPage;
+      _hasScanned = false;
     });
 
     if (isScanningPage) {
@@ -34,6 +37,104 @@ class _QrScanScreenState extends State<QrScanScreen> {
     } else {
       cameraController.stop();
     }
+  }
+
+  void _showSuccessDialog() {
+    if (_hasScanned) return;
+
+    setState(() {
+      _hasScanned = true;
+    });
+
+    cameraController.stop();
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.card),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.xl),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 235, 244, 247),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.check_circle,
+                    size: 60,
+                    color: AppColors.primary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                const Text(
+                  "Absen Berhasil",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                const Text(
+                  "Absen Mata Kuliah \"Sistem Enterprise - A\" berhasil disimpan",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xl),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+
+                      setState(() {
+                        _hasScanned = false;
+                      });
+
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const RiwayatScreen(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.md,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.button),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      "Lihat riwayat absen",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -140,20 +241,20 @@ class _QrScanScreenState extends State<QrScanScreen> {
           controller: cameraController,
           onDetect: (capture) {
             final List<Barcode> barcodes = capture.barcodes;
-            if (barcodes.isNotEmpty) {
-              final String code = barcodes.first.rawValue ?? 'Tidak ada data';
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('QR Ditemukan: $code')));
+            if (barcodes.isNotEmpty && !_hasScanned) {
+              _showSuccessDialog();
             }
           },
         ),
-        CustomPaint(
-          size: Size.infinite,
-          painter: QRScannerOverlay(
-            scanWindowSize: 250.0,
-            borderColor: AppColors.surface,
-            scanWindowRadius: AppRadius.button,
+        GestureDetector(
+          onTap: _showSuccessDialog,
+          child: CustomPaint(
+            size: Size.infinite,
+            painter: QRScannerOverlay(
+              scanWindowSize: 250.0,
+              borderColor: AppColors.surface,
+              scanWindowRadius: AppRadius.button,
+            ),
           ),
         ),
         _buildScannerBottomControls(),
@@ -162,8 +263,8 @@ class _QrScanScreenState extends State<QrScanScreen> {
   }
 
   Widget _buildMyQrUi() {
-    const String nim = "235150601111012";
-    const String qrData = "mahasiswanim:235150601111012";
+    const String nim = "235150600111001";
+    const String qrData = "mahasiswanim:235150600111001";
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
