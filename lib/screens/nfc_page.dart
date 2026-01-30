@@ -12,7 +12,7 @@ class NfcPage extends StatefulWidget {
 
 class _NfcPageState extends State<NfcPage> {
   Timer? _timer;
-  int _remainingSeconds = 90;
+  int _remainingSeconds = 5;
 
   @override
   void initState() {

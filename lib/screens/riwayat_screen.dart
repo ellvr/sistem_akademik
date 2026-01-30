@@ -12,28 +12,28 @@ class RiwayatScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-        elevation: 2,
-        shadowColor: Colors.black.withOpacity(0.5),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        leading: canPop
-            ? IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.black),
-                onPressed: () => Navigator.pop(context),
-              )
-            : null,
-        title: const Text(
-          "Riwayat Presensi",
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.white,
+      //   surfaceTintColor: Colors.white,
+      //   elevation: 2,
+      //   shadowColor: Colors.black.withOpacity(0.5),
+      //   centerTitle: true,
+      //   automaticallyImplyLeading: false,
+      //   leading: canPop
+      //       ? IconButton(
+      //           icon: const Icon(Icons.arrow_back, color: Colors.black),
+      //           onPressed: () => Navigator.pop(context),
+      //         )
+      //       : null,
+      //   title: const Text(
+      //     "Riwayat Presensi",
+      //     style: TextStyle(
+      //       color: Colors.black,
+      //       fontWeight: FontWeight.bold,
+      //       fontSize: 18,
+      //     ),
+      //   ),
+      // ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
         children: [
@@ -105,7 +105,7 @@ class RiwayatScreen extends StatelessWidget {
           ),
           const SizedBox(width: AppSpacing.sm),
           const Text(
-            "Cek kembali riwayat absensimu",
+            "Cek kembali riwayat presensimu",
             style: TextStyle(
               color: Colors.white,
               fontSize: 13,
