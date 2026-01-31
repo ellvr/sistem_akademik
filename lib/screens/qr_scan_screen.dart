@@ -3,9 +3,11 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:sistem_akademik/screens/riwayat_screen.dart';
 import 'package:sistem_akademik/theme/design_system.dart';
+import 'dart:async';
 
 class QrScanScreen extends StatefulWidget {
-  const QrScanScreen({super.key});
+  final VoidCallback? onViewHistory; // Tambahkan callback ini
+  const QrScanScreen({super.key, this.onViewHistory});
 
   @override
   State<QrScanScreen> createState() => _QrScanScreenState();
@@ -17,6 +19,17 @@ class _QrScanScreenState extends State<QrScanScreen> {
   final MobileScannerController cameraController = MobileScannerController();
 
   @override
+  void initState() {
+    super.initState();
+    // OTOMATIS: Munculkan pop-up berhasil setelah 1 detik untuk simulasi/testing
+    Future.delayed(const Duration(seconds: 1), () {
+      if (mounted && _isScanning) {
+        _showSuccessDialog();
+      }
+    });
+  }
+
+  @override
   void dispose() {
     cameraController.dispose();
     super.dispose();
@@ -24,14 +37,15 @@ class _QrScanScreenState extends State<QrScanScreen> {
 
   void _togglePage(bool isScanningPage) {
     if (_isScanning == isScanningPage) return;
-
     setState(() {
       _isScanning = isScanningPage;
       _hasScanned = false;
     });
-
     if (isScanningPage) {
       cameraController.start();
+      Future.delayed(const Duration(seconds: 1), () {
+        if (mounted && _isScanning) _showSuccessDialog();
+      });
     } else {
       cameraController.stop();
     }
@@ -39,11 +53,9 @@ class _QrScanScreenState extends State<QrScanScreen> {
 
   void _showSuccessDialog() {
     if (_hasScanned) return;
-
     setState(() {
       _hasScanned = true;
     });
-
     cameraController.stop();
 
     showDialog(
@@ -52,10 +64,7 @@ class _QrScanScreenState extends State<QrScanScreen> {
       builder: (context) {
         return Dialog(
           backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppRadius.card),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.card)),
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.xl),
             child: Column(
@@ -63,8 +72,8 @@ class _QrScanScreenState extends State<QrScanScreen> {
               children: [
                 Container(
                   padding: const EdgeInsets.all(AppSpacing.md),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFEBF4F7),
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 235, 244, 247),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -76,16 +85,17 @@ class _QrScanScreenState extends State<QrScanScreen> {
                 const SizedBox(height: AppSpacing.lg),
                 const Text(
                   "Absen Berhasil",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 const Text(
                   "Absen Mata Kuliah \"Sistem Enterprise - A\" berhasil disimpan",
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
                 ),
                 const SizedBox(height: AppSpacing.xl),
                 SizedBox(
@@ -93,9 +103,11 @@ class _QrScanScreenState extends State<QrScanScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context);
+
                       setState(() {
                         _hasScanned = false;
                       });
+
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => const RiwayatScreen(),
@@ -104,21 +116,9 @@ class _QrScanScreenState extends State<QrScanScreen> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: AppSpacing.md,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.button),
-                      ),
-                      elevation: 0,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.button)),
                     ),
-                    child: const Text(
-                      "Lihat riwayat absen",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: const Text("Lihat riwayat absen", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
                 ),
               ],
@@ -215,7 +215,8 @@ class _QrScanScreenState extends State<QrScanScreen> {
       ),
     );
   }
-
+  
+  // ... (Sisa fungsi _buildToggleSwitch, _buildScannerUi, dll tetap sama)
   Widget _buildToggleSwitch() {
     return Container(
       width: double.infinity,
@@ -334,8 +335,8 @@ class _QrScanScreenState extends State<QrScanScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "NIM : $nim",
-          style: const TextStyle(
+          "Nim : $nim",
+          style: TextStyle(
             color: AppColors.accent,
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -407,7 +408,7 @@ class _QrScanScreenState extends State<QrScanScreen> {
     );
   }
 }
-
+// ... (QRScannerOverlay tetap sama)
 class QRScannerOverlay extends CustomPainter {
   final double scanWindowSize;
   final double scanWindowRadius;

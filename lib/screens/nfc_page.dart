@@ -21,9 +21,6 @@ class NfcPage extends StatefulWidget {
 class _NfcPageState extends State<NfcPage> {
   Timer? _timer;
   int _remainingSeconds = 90;
-  bool _showDebugMenu = false;
-
-  final String mataKuliah = "Sistem Enterprise - A";
 
   @override
   void initState() {

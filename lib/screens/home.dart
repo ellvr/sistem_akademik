@@ -22,29 +22,34 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
-  @override
-  Widget build(BuildContext context) {
-    final List<Widget> _pages = [
-      _buildDashboardContent(),
-      const QrScanScreen(),
-      const NfcPage(),
-      const RiwayatScreen(),
-      const ProfileScreen(),
-    ];
+ // Di dalam class _HomePageState pada file home.dart
+@override
+Widget build(BuildContext context) {
+  final List<Widget> _pages = [
+    _buildDashboardContent(),
+    QrScanScreen(
+      onViewHistory: () {
+        setState(() {
+          _currentIndex = 3; // Index halaman Riwayat di Navbar
+        });
+      },
+    ),
+    const NfcPage(),
+    const RiwayatScreen(),
+    const ProfileScreen(),
+  ];
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(child: _pages[_currentIndex]),
-      bottomNavigationBar: BottomNavBar(
-        initialIndex: _currentIndex,
-        onItemTapped: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-      ),
-    );
-  }
+  return Scaffold(
+    backgroundColor: AppColors.background,
+    body: SafeArea(child: _pages[_currentIndex]),
+    bottomNavigationBar: BottomNavBar(
+      initialIndex: _currentIndex,
+      onItemTapped: (index) {
+        setState(() { _currentIndex = index; });
+      },
+    ),
+  );
+}
 
   Widget _buildDashboardContent() {
     final user = DummyService.getMockUser();
