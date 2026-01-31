@@ -38,12 +38,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 const SizedBox(height: 20),
                 const Text(
-                  'Konfirmasi Keluar',
+                  'Konfirmasi Logout',
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  'Apakah anda yakin ingin keluar dari aplikasi?',
+                  'Apakah anda yakin ingin logout dari aplikasi?',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
@@ -64,7 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         child: const Text(
-                          'Keluar',
+                          'Logout',
                           style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                       ),
