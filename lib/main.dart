@@ -3,7 +3,6 @@ import 'package:sistem_akademik/screens/home.dart';
 import 'screens/splash_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/profile_screen.dart';
-import 'screens/auth/register_screen.dart';
 import 'screens/onboarding_screen.dart';
 
 void main() {
@@ -27,7 +26,6 @@ class MyApp extends StatelessWidget {
         '/onboarding': (context) => OnboardingScreen(),
         '/home': (context) => HomePage(),
         '/login': (context) => LoginScreen(),
-        '/register': (context) => RegisterScreen(),
         '/profile': (context) => const ProfileScreen(),
       },
     );

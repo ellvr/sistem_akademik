@@ -22,6 +22,9 @@ class _NfcPageState extends State<NfcPage> {
   Timer? _timer;
   int _remainingSeconds = 90;
 
+  bool _showDebugMenu = false;
+  final String mataKuliah = "Pemrograman Mobile";
+
   @override
   void initState() {
     super.initState();
@@ -46,7 +49,7 @@ class _NfcPageState extends State<NfcPage> {
           _remainingSeconds--;
         });
       } else {
-        _timer?.cancel();
+        timer.cancel();
         _showResultDialog(NfcResultType.failedTimeisUp);
       }
     });
@@ -232,6 +235,8 @@ class _NfcPageState extends State<NfcPage> {
   void _showResultDialog(NfcResultType type) {
     if (!mounted) return;
 
+    _timer?.cancel();
+
     IconData icon;
     Color iconColor;
     String title;
@@ -267,15 +272,7 @@ class _NfcPageState extends State<NfcPage> {
         title = "Absensi Gagal";
         message =
             "Waktu pemindaian habis dan NFC belum terdeteksi, silahkan coba lagi.";
-        actionButton = ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.textOnPrimary,
-            minimumSize: const Size(double.infinity, 44),
-          ),
-          onPressed: () => Navigator.pop(context),
-          child: const Text("OK"),
-        );
+        actionButton = _buildOkButton();
         break;
 
       case NfcResultType.failedNotSaved:
@@ -284,15 +281,7 @@ class _NfcPageState extends State<NfcPage> {
         title = "Absensi Gagal";
         message =
             "Proses absensi gagal dan data tidak tersimpan. Silahkan coba lagi.";
-        actionButton = ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.textOnPrimary,
-            minimumSize: const Size(double.infinity, 44),
-          ),
-          onPressed: () => Navigator.pop(context),
-          child: const Text("OK"),
-        );
+        actionButton = _buildOkButton();
         break;
 
       case NfcResultType.deviceNotSupported:
@@ -300,22 +289,14 @@ class _NfcPageState extends State<NfcPage> {
         iconColor = AppColors.error;
         title = "Perangkat Tidak Didukung";
         message = "Maaf perangkat Anda tidak mendukung fitur NFC.";
-        actionButton = ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.textOnPrimary,
-            minimumSize: const Size(double.infinity, 44),
-          ),
-          onPressed: () => Navigator.pop(context),
-          child: const Text("OK"),
-        );
+        actionButton = _buildOkButton();
         break;
     }
 
     showDialog(
       context: context,
       barrierDismissible: true,
-      builder: (context) {
+      builder: (_) {
         return Dialog(
           child: Container(
             padding: const EdgeInsets.all(AppSpacing.xxl),
@@ -349,6 +330,18 @@ class _NfcPageState extends State<NfcPage> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildOkButton() {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.primary,
+        foregroundColor: AppColors.textOnPrimary,
+        minimumSize: const Size(double.infinity, 44),
+      ),
+      onPressed: () => Navigator.pop(context),
+      child: const Text("OK"),
     );
   }
 }

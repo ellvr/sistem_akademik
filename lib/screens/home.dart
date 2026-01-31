@@ -30,7 +30,7 @@ Widget build(BuildContext context) {
     QrScanScreen(
       onViewHistory: () {
         setState(() {
-          _currentIndex = 3; // Index halaman Riwayat di Navbar
+          _currentIndex = 3;
         });
       },
     ),

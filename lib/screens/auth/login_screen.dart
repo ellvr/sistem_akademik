@@ -21,95 +21,12 @@ class _LoginScreenState extends State<LoginScreen>
   String? _nimError;
   String? _passwordError;
 
-  // Variabel loading dimatikan sementara untuk testing agar tidak error lifecycle
-  /*
-  late final AnimationController _loadingController = AnimationController(
-    duration: const Duration(seconds: 2),
-    vsync: this,
-  )..repeat();
-  */
-
   @override
   void dispose() {
     _nimEmailController.dispose();
     _passwordController.dispose();
-    // _loadingController.dispose();
-    super.dispose();
-  }
 
-  // Dialog loading di-comment out agar tidak menghalangi testing
-  void _showLoadingDialog(BuildContext context) {
-    /*
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          insetPadding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.8,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 20),
-                RotationTransition(
-                  turns: _loadingController,
-                  child: SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: Stack(
-                      children: List.generate(8, (index) {
-                        return Positioned.fill(
-                          child: RotationTransition(
-                            turns: AlwaysStoppedAnimation(index / 8),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Container(
-                                height: 5 + (index * 0.7),
-                                width: 5 + (index * 0.7),
-                                decoration: const BoxDecoration(
-                                  color: primaryButtonColor,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 32),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 235, 244, 247),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Text(
-                    'Loading...',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: primaryButtonColor,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-    */
+    super.dispose();
   }
 
   void _handleLogin(BuildContext context) async {
@@ -134,10 +51,6 @@ class _LoginScreenState extends State<LoginScreen>
     });
 
     if (_nimError == null && _passwordError == null) {
-      // Pemanggilan dialog loading dimatikan agar transisi langsung
-      // _showLoadingDialog(context);
-
-      // Kurangi delay agar testing lebih cepat
       await Future.delayed(const Duration(milliseconds: 500));
 
       final prefs = await SharedPreferences.getInstance();
@@ -145,7 +58,6 @@ class _LoginScreenState extends State<LoginScreen>
 
       if (!mounted) return;
 
-      // Navigator.of(context).pop(); // Tidak perlu pop karena dialog tidak muncul
       Navigator.of(context).pushReplacementNamed('/home');
     }
   }
@@ -186,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen>
                 child: Column(
                   children: [
                     const Text(
-                      'Masuk',
+                      'Login',
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
@@ -225,20 +137,9 @@ class _LoginScreenState extends State<LoginScreen>
                             });
                           },
                         ),
-                        const SizedBox(height: 10),
-                        InkWell(
-                          onTap: () {},
-                          child: const Text(
-                            'Lupa password?',
-                            style: TextStyle(
-                              color: primaryButtonColor,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 40),
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -252,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen>
                           ),
                         ),
                         child: const Text(
-                          'Masuk',
+                          'Login',
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
                       ),
